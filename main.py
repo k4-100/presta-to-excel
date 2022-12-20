@@ -9,11 +9,14 @@ def main():
     password = ''
     host = '127.0.0.1'
     database = 'prestashop_1_6'
+    table = "ps_product"
 
-    new_user = input(f'user[default: {user}]')
-    new_password = input(f'password[default: {password}]')
-    new_host = input(f'host[default: {host}]')
-    new_database = input(f'database[default: {database}]')
+    new_user = input(f'nazwa użytkownika[bazowo: {user}]')
+    new_password = input(f'hasło[bazowo: {password}]')
+    new_host = input(f'adres hosta[bazowo: {host}]')
+    new_database = input(f'nazwa bazy danych[bazowo: {database}]')
+    new_table = input(f'nazwa tablicy z danymi[bazowo: {table}]')
+    
 
     if new_user:
         user = new_user
@@ -23,6 +26,8 @@ def main():
         host = new_host
     if new_database:
         database = new_database
+    if new_table:
+        table = new_table
 
     body = []
     headers = []
@@ -36,14 +41,14 @@ def main():
             database=database
     )
     cursor = cnx.cursor()
-    cursor.execute("SELECT * FROM ps_product")
+    cursor.execute(f"SELECT * FROM {table}")
     
     for item in cursor:
         body.append( item )
     cursor.close()
 
 
-    res = cnx._execute_query("SELECT * FROM ps_product")
+    res = cnx._execute_query(f"SELECT * FROM {table}")
     
     for item in res["columns"]:
         headers.append(item[0])
@@ -59,9 +64,10 @@ def main():
             if y == len(body[0]) - 1:
                 data.append( row )
 
+    data.headers = headers
     
-    print("zapisywanie danych w pliku .xls...")
-    f = open("test.xls", "wb")
+    print(f"zapisywanie danych w pliku {table}.xls...")
+    f = open(f"{table}.xls", "wb")
     f.write( data.export('xls'));
     f.close()
 
