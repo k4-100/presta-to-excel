@@ -7,3 +7,4 @@ pip install -r requirements.txt
 ```
 python main.py
 ```
+3. postępuj zgodnie z promptami (klikaj **Enter** aby przeskoczyć)
