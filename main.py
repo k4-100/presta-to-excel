@@ -15,13 +15,13 @@ def main():
     new_host = input(f'host[default: {host}]')
     new_database = input(f'database[default: {database}]')
 
-    if new_user == True:
+    if new_user:
         user = new_user
-    if new_password == True:
+    if new_password:
         password = new_password
-    if new_host == True:
+    if new_host:
         host = new_host
-    if new_database == True:
+    if new_database:
         database = new_database
 
     body = []
@@ -50,7 +50,7 @@ def main():
     cnx.close()
             
     print("wkładanie danych do obiektu...")
-
+    
     data = tablib.Dataset()
     for x in range(0, len(body)):
         row = []
