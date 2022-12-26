@@ -34,6 +34,10 @@ def main():
     body = []
     headers = []
 
+    wb = Workbook()
+    ws1 = wb.active
+    ws1.title = f'{table}'
+
     print("\npobieranie danych z bazy...")
 
     cnx = mysql.connector.connect(
@@ -45,26 +49,36 @@ def main():
     cursor = cnx.cursor()
     cursor.execute(f"SELECT * FROM {table}")
     
-wb = Workbook()
+    for item in cursor:
+        body.append( item )
+    cursor.close()
 
-dest_filename = 'empty_book.xlsx'
 
-ws1 = wb.active
-ws1.title = "range names"
 
-for row in range(1, 40):
-     ws1.append(range(600))
+    res = cnx._execute_query(f"SELECT * FROM {table}")
+    # pprint(res["columns"])
+    for index, item in enumerate(res["columns"]):
+        # headers.append(item[0])
+        pprint(item)
+        pprint(index)
+        if()
+            ws1.cell( row=1, column = 1 + index, value=item[0] )
+    cnx.close()
+            
+    print("wkładanie danych do obiektu...")
+    
+    
+    wb.save('pyxltext.xlsx');
 
-ws2 = wb.create_sheet(title="Pi")
 
-ws2['F5'] = 3.14
+    # for x in range(0, len(body)):
+    #     row = []
+    #     for y in range(0, len(body[0])):
+    #         row.append( body[x][y] )
+    #         if y == len(body[0]) - 1:
+    #             data.append( row )
 
-ws3 = wb.create_sheet(title="Data")
-for row in range(10, 20):
-     for col in range(27, 54):
-         _ = ws3.cell(column=col, row=row, value="{0}".format(get_column_letter(col)))
-print(ws3['AA10'].value)
-wb.save(filename = dest_filename)
+
 
     # data.headers = headers
     
