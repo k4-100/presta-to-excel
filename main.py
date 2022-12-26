@@ -56,13 +56,15 @@ def main():
 
 
     res = cnx._execute_query(f"SELECT * FROM {table}")
-    # pprint(res["columns"])
-    for index, item in enumerate(res["columns"]):
-        # headers.append(item[0])
-        pprint(item)
-        pprint(index)
-        if()
-            ws1.cell( row=1, column = 1 + index, value=item[0] )
+    pprint(res["columns"])
+    for x, item in enumerate(res["columns"] ):
+        for y in range(0,len(item)):
+            ws1.cell( row = 1 + y, column = 1 + x, value = item[y])
+    # for index, item in enumerate(res["columns"]):
+    #     # headers.append(item[0])
+    #     pprint(item)
+    #     pprint(index)
+    #         ws1.cell( row=1, column = 1 + index, value=item[0] )
     cnx.close()
             
     print("wkładanie danych do obiektu...")
