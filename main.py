@@ -12,12 +12,14 @@ def main():
     host = '127.0.0.1'
     database = 'prestashop_1_6'
     table = "ps_product"
+    limit = 0
 
     new_user = input(f'nazwa użytkownika[bazowo: {user}]')
     new_password = input(f'hasło[bazowo: {password}]')
     new_host = input(f'adres hosta[bazowo: {host}]')
     new_database = input(f'nazwa bazy danych[bazowo: {database}]')
     new_table = input(f'nazwa tablicy z danymi[bazowo: {table}]')
+    new_limit = input(f'limit wartości[bazowo: {limit}]')
     
 
     if new_user:
@@ -52,20 +54,20 @@ def main():
     for item in cursor:
         body.append( item )
     cursor.close()
-
+    pprint(body)
     
     res = cnx._execute_query(f"SELECT * FROM {table}")
-    pprint(res["columns"])
-    for x, item in enumerate(res["columns"] ):
+    for item in res["columns"]:
+        headers.append(item[0])
+    cnx.close()
+
+    for x, item in enumerate(body):
         column_letter = get_column_letter(x+1)
         for y in range(0,len(item)):
-            ws1.cell( row = 1 + y, column = 1 + x, value = item[y])
+            ws1.cell( row = 1 + 1 + x, column = 1 + y, value = item[y])
             ws1.column_dimensions[column_letter].width = 30
-    # for index, item in enumerate(res["columns"]):
-    #     # headers.append(item[0])
-    #     pprint(item)
-    #     pprint(index)
-    #         ws1.cell( row=1, column = 1 + index, value=item[0] )
+    for x in range(0, len(headers)):
+        ws1.cell( row = 1, column = 1 + x, value = headers[x])
     cnx.close()
 
     
@@ -86,7 +88,7 @@ def main():
     print("wkładanie danych do obiektu...")
     
     
-    wb.save('pyxltext.xlsx');
+    wb.save(f'{table}.xlsx');
 
 
     # for x in range(0, len(body)):
