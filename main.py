@@ -18,6 +18,8 @@ SELECT id_product, reference FROM ps_product
 
 DB = 'prestashop_1_6'
 
+FILENAME = "kilka_queries"
+
 
 
 def main():
@@ -94,7 +96,7 @@ def main():
         print("wkładanie danych do obiektu...\n")
 
 
-    wb.save(f'test-multiple_queries.xlsx');
+    wb.save(f'{FILENAME}.xlsx');
         
 
 if __name__ == '__main__':
