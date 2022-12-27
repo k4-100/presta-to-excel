@@ -4,73 +4,97 @@ from openpyxl.utils import get_column_letter
 import mysql.connector
 from pprint import pprint
 
+QUERIES = [
+'''
+SELECT * FROM ps_product
+''',
+'''
+SELECT * FROM ps_stock_available
+''',
+'''
+SELECT id_product, reference FROM ps_product
+''',
+]
+
+DB = 'prestashop_1_6'
+
 
 
 def main():
     user = 'root'
     password = ''
     host = '127.0.0.1'
-    database = 'prestashop_1_6'
-    table = "ps_product"
-    limit = 0
-
-    new_user = input(f'nazwa użytkownika[bazowo: {user}]')
-    new_password = input(f'hasło[bazowo: {password}]')
-    new_host = input(f'adres hosta[bazowo: {host}]')
-    new_database = input(f'nazwa bazy danych[bazowo: {database}]')
-    new_table = input(f'nazwa tablicy z danymi[bazowo: {table}]')
-    new_limit = input(f'limit wartości[bazowo: {limit}]')
+    database = DB
+    # table = "ps_product"
+    # limit = 0
     
 
-    if new_user:
-        user = new_user
-    if new_password:
-        password = new_password
-    if new_host:
-        host = new_host
-    if new_database:
-        database = new_database
-    if new_table:
-        table = new_table
+    # new_user = input(f'nazwa użytkownika[bazowo: {user}]')
+    # new_password = input(f'hasło[bazowo: {password}]')
+    # new_host = input(f'adres hosta[bazowo: {host}]')
+    # new_database = input(f'nazwa bazy danych[bazowo: {database}]')
+    # new_table = input(f'nazwa tablicy z danymi[bazowo: {table}]')
+    # new_limit = input(f'limit wartości[bazowo: {limit}]')
+    # 
 
-    body = []
-    headers = []
+    # if new_user:
+    #     user = new_user
+    # if new_password:
+    #     password = new_password
+    # if new_host:
+    #     host = new_host
+    # if new_database:
+    #     database = new_database
+    # if new_table:
+    #     table = new_table
 
     wb = Workbook()
-    ws1 = wb.active
-    ws1.title = f'{table}'
+    index = 1
+    for x, query in enumerate(QUERIES):
+        body = []
+        headers = []
+        
+        tabname = query.split("FROM")[1]
+        if x != 0:
+            ws = wb.create_sheet(f'{index} {tabname}')
+        else:
+            ws = wb.active
+            ws.title = f'{index} {tabname}'
 
-    print("\npobieranie danych z bazy...")
+        print("\npobieranie danych z bazy...")
 
-    cnx = mysql.connector.connect(
-            user=user, 
-            password=password,
-            host=host,
-            database=database
-    )
-    cursor = cnx.cursor()
-    cursor.execute(f"SELECT * FROM {table}")
-    
-    for item in cursor:
-        body.append( item )
-    cursor.close()
-    
-    res = cnx._execute_query(f"SELECT * FROM {table}")
-    for item in res["columns"]:
-        headers.append(item[0])
-    cnx.close()
+        cnx = mysql.connector.connect(
+                user=user, 
+                password=password,
+                host=host,
+                database=database
+        )
+        cursor = cnx.cursor()
+        cursor.execute(query)
+        
+        for item in cursor:
+            body.append( item )
+        cursor.close()
+        
+        res = cnx._execute_query(query)
+        for item in res["columns"]:
+            headers.append(item[0])
+        cnx.close()
 
-    for x, item in enumerate(body):
-        for y in range(0,len(item)):
-            ws1.cell( row = 1 + 1 + x, column = 1 + y, value = item[y])
-    for x in range(0, len(headers)):
-        ws1.cell( row = 1, column = 1 + x, value = headers[x])
-        ws1.column_dimensions[get_column_letter(x+1)].width = 30
+        for x, item in enumerate(body):
+            for y in range(0,len(item)):
+                ws.cell( row = 1 + 1 + x, column = 1 + y, value = item[y])
+        for x in range(0, len(headers)):
+            ws.cell( row = 1, column = 1 + x, value = headers[x])
+            ws.column_dimensions[get_column_letter(x+1)].width = 30
 
-            
-    print("wkładanie danych do obiektu...")
-    
-    wb.save(f'{table}.xlsx');
+        index += 1 
+        print("wkładanie danych do obiektu...")
+        print(f'wykonano zapytanie: {query} ')
+
+
+    wb.save(f'test-multiple_queries.xlsx');
+        
 
 if __name__ == '__main__':
     main()
