@@ -53,19 +53,35 @@ def main():
         body.append( item )
     cursor.close()
 
-
-
+    
     res = cnx._execute_query(f"SELECT * FROM {table}")
     pprint(res["columns"])
     for x, item in enumerate(res["columns"] ):
+        column_letter = get_column_letter(x+1)
         for y in range(0,len(item)):
             ws1.cell( row = 1 + y, column = 1 + x, value = item[y])
+            ws1.column_dimensions[column_letter].width = 30
     # for index, item in enumerate(res["columns"]):
     #     # headers.append(item[0])
     #     pprint(item)
     #     pprint(index)
     #         ws1.cell( row=1, column = 1 + index, value=item[0] )
     cnx.close()
+
+    
+        # pprint( openpyxl.utils.cell.get_column_letter() )
+        # openpyxl.uti
+        # ws1.column_dimensions[column_cells[0].column].width = 30
+
+    # for row in ws1.rows:
+    #     for cell in row:
+    #         if cell.value:
+    #             dims[cell.column] = max((dims.get(cell.column, 0), len(str(cell.value))))    
+    # for col, value in dims.items():
+    #     pprint(col, value)
+        # ws1.column_dimensions[col].width = 100
+
+
             
     print("wkładanie danych do obiektu...")
     
