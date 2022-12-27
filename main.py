@@ -4,17 +4,21 @@ from openpyxl.utils import get_column_letter
 import mysql.connector
 from pprint import pprint
 
-QUERIES = [
-'''
+# QUERIES = [
+# '''
+# SELECT * FROM ps_product
+# ''',
+# '''
+# SELECT * FROM ps_stock_available
+# ''',
+# '''
+# SELECT id_product, reference FROM ps_product
+# ''',
+# ]
+
+FIRST_QUERY = '''
 SELECT * FROM ps_product
-''',
 '''
-SELECT * FROM ps_stock_available
-''',
-'''
-SELECT id_product, reference FROM ps_product
-''',
-]
 
 DB = 'prestashop_1_6'
 
@@ -52,13 +56,14 @@ def main():
 
     wb = Workbook()
     index = 1
-    for x, query in enumerate(QUERIES):
+    query = FIRST_QUERY
+    while True:
         print('###################################')
         body = []
         headers = []
         
         tabname = query.split("FROM")[1]
-        if x != 0:
+        if index > 1:
             ws = wb.create_sheet(f'{index} {tabname}')
         else:
             ws = wb.active
@@ -94,7 +99,12 @@ def main():
 
         index += 1 
         print("wkładanie danych do obiektu...\n")
-
+        
+        query = input("następne zapytanie[naciśnij ENTER aby zakończyć]: ")
+        
+        # loop break
+        if bool(query) == False:
+            break
 
     wb.save(f'{FILENAME}.xlsx');
         
