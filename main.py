@@ -51,6 +51,7 @@ def main():
     wb = Workbook()
     index = 1
     for x, query in enumerate(QUERIES):
+        print('###################################')
         body = []
         headers = []
         
@@ -61,7 +62,8 @@ def main():
             ws = wb.active
             ws.title = f'{index} {tabname}'
 
-        print("\npobieranie danych z bazy...")
+        print(f'wykonanywanie zapytania:\n{query} ')
+        print("pobieranie danych z bazy...")
 
         cnx = mysql.connector.connect(
                 user=user, 
@@ -89,8 +91,7 @@ def main():
             ws.column_dimensions[get_column_letter(x+1)].width = 30
 
         index += 1 
-        print("wkładanie danych do obiektu...")
-        print(f'wykonano zapytanie: {query} ')
+        print("wkładanie danych do obiektu...\n")
 
 
     wb.save(f'test-multiple_queries.xlsx');
