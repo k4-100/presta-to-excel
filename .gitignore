@@ -1,2 +1,6 @@
 *.xls?
 .idea
+.exe
+build
+dist
+main.spec

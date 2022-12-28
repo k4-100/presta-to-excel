@@ -1,25 +1,27 @@
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 import mysql.connector
-from pprint import pprint
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-DB = 'prestashop_older'
-FILENAME = "kilka_queries"
 
+FILENAME = os.getenv('FILENAME')
 
 
 def main():
-    user = 'root'
-    password = ''
-    host = '127.0.0.1'
-    database = DB
+    user = os.getenv('USER')
+    password = os.getenv('PASSWORD')
+    host = os.getenv("HOST")
+    database = os.getenv("DATABASE")
 
     wb = Workbook()
     index = 1
     written_into_wb = False
     while True:
-        query = input("następne zapytanie[naciśnij ENTER aby zakończyć]: ")
+        query = input("następne zapytanie[j ENTER aby zakończyć]: ")
         # loop break
         if bool(query) == False:
             break
