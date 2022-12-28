@@ -1,5 +1,2 @@
 mysql-connector-python
-tablib
-tablib[xls]
 openpyxl
-pandas

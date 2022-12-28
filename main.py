@@ -1,27 +1,10 @@
-# import tablib
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 import mysql.connector
 from pprint import pprint
 
-# QUERIES = [
-# '''
-# SELECT * FROM ps_product
-# ''',
-# '''
-# SELECT * FROM ps_stock_available
-# ''',
-# '''
-# SELECT id_product, reference FROM ps_product
-# ''',
-# ]
 
-FIRST_QUERY = '''
-SELECT * FROM ps_product
-'''
-
-DB = 'prestashop_1_6'
-
+DB = 'prestashop_older'
 FILENAME = "kilka_queries"
 
 
@@ -31,33 +14,20 @@ def main():
     password = ''
     host = '127.0.0.1'
     database = DB
-    # table = "ps_product"
-    # limit = 0
-    
-
-    # new_user = input(f'nazwa użytkownika[bazowo: {user}]')
-    # new_password = input(f'hasło[bazowo: {password}]')
-    # new_host = input(f'adres hosta[bazowo: {host}]')
-    # new_database = input(f'nazwa bazy danych[bazowo: {database}]')
-    # new_table = input(f'nazwa tablicy z danymi[bazowo: {table}]')
-    # new_limit = input(f'limit wartości[bazowo: {limit}]')
-    # 
-
-    # if new_user:
-    #     user = new_user
-    # if new_password:
-    #     password = new_password
-    # if new_host:
-    #     host = new_host
-    # if new_database:
-    #     database = new_database
-    # if new_table:
-    #     table = new_table
 
     wb = Workbook()
     index = 1
-    query = FIRST_QUERY
+    written_into_wb = False
     while True:
+        query = input("następne zapytanie[naciśnij ENTER aby zakończyć]: ")
+        # loop break
+        if bool(query) == False:
+            break
+
+        if written_into_wb == False:
+            written_into_wb = True
+
+
         print('###################################')
         body = []
         headers = []
@@ -100,13 +70,9 @@ def main():
         index += 1 
         print("wkładanie danych do obiektu...\n")
         
-        query = input("następne zapytanie[naciśnij ENTER aby zakończyć]: ")
         
-        # loop break
-        if bool(query) == False:
-            break
-
-    wb.save(f'{FILENAME}.xlsx');
+    if written_into_wb:
+        wb.save(f'{FILENAME}.xlsx')
         
 
 if __name__ == '__main__':
